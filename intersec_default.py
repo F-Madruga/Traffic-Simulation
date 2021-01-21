@@ -18,14 +18,15 @@ while carryOn:
         if event.type == pygame.QUIT:
             carryOn = False
     screen.fill(BLACK)
-    pygame.draw.line(screen, WHITE, [200, 0], [200, 200], 2)
-    pygame.draw.line(screen, WHITE, [300, 0], [300, 200], 2)
-    pygame.draw.line(screen, WHITE, [0, 200], [200, 200], 2)
-    pygame.draw.line(screen, WHITE, [0, 300], [200, 300], 2)
-    pygame.draw.line(screen, WHITE, [200, 300], [200, 500], 2)
-    pygame.draw.line(screen, WHITE, [300, 200], [500, 200], 2)
-    pygame.draw.line(screen, WHITE, [300, 300], [500, 300], 2)
-    pygame.draw.line(screen, WHITE, [300, 300], [300, 500], 2)
+    #pygame.draw.line(screen, WHITE, [200, 0], [200, 200], 2)
+    #pygame.draw.line(screen, WHITE, [300, 0], [300, 200], 2)
+    #pygame.draw.line(screen, WHITE, [0, 200], [200, 200], 2)
+    #pygame.draw.line(screen, WHITE, [0, 300], [200, 300], 2)
+    #pygame.draw.line(screen, WHITE, [200, 300], [200, 500], 2)
+    #pygame.draw.line(screen, WHITE, [300, 300], [300, 500], 2)
+    #pygame.draw.line(screen, WHITE, [300, 200], [500, 200], 2)
+    #pygame.draw.line(screen, WHITE, [300, 300], [500, 300], 2)
+
 
     pygame.display.update()
 pygame.quit()
