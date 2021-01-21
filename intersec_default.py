@@ -15,7 +15,7 @@ size = (500, 500)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Traffic Simulator")
 
-car1 = Car(225,10,0,0.05)
+car1 = Car(225,10)
 
 while carryOn:
     for event in pygame.event.get():
@@ -31,7 +31,7 @@ while carryOn:
     pygame.draw.line(screen, WHITE, [300, 300], [500, 300], 2)
     pygame.draw.line(screen, WHITE, [300, 300], [300, 500], 2)
 
-    car1.move_y()
+    car1.move_down()
     car1.display(screen)
     pygame.display.update()
 pygame.quit()
