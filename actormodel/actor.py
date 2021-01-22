@@ -17,12 +17,12 @@ class Actor(Thread):
         while (True):
             message = self.mailbox.get()
             if message != None:
-                self.handleMessage(message)
+                self.handle_message(message)
                 if message.messageType == "kill":
                     break
             else:
                 time.sleep(0.01)
     
     @abstractmethod
-    def handleMessage(self, message):
+    def handle_message(self, message):
         pass
