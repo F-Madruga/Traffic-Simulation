@@ -6,8 +6,7 @@ from car import Car
 
 
 def main(argv):
-    city = City.read_file(argv[0])
-    car1 = Car(constants.SIZE, 200, 0)
+    city = City.read_file(argv[0], constants.WIDTH, constants.HEIGHT)
 
     carryOn = True
     pygame.init()
@@ -20,8 +19,6 @@ def main(argv):
             if event.type == pygame.QUIT:
                 carryOn = False
         city.display(screen)
-        car1.display(screen)
-        car1.move_down()
         pygame.display.update()
     pygame.quit()
 

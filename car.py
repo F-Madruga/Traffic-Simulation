@@ -1,33 +1,37 @@
 import pygame
 import constants
 from actormodel.actor import Actor
+from pygame.math import Vector2
 
 
 class Car(Actor):
-    def __init__(self, radius, x, y, velocity=0.1):
+    def __init__(self, x, y, angle, velocity=Vector2(0.0, 0.01), radius=constants.SIZE):
         self.radius = radius
-        self.x = x
-        self.y = y
+        self.position = Vector2(x, y)
         self.velocity = velocity
+        self.angle = angle
         super().__init__()
     
     def __str__(self):
-     return "Car={x=" + str(self.x) + ", y=" + str(self.y) + ", velocity=" + str(self.velocity) + ", radius=" + str(self.radius) + "}"
+     return "Car={position=" + str(self.position) + ", velocity=" + str(self.velocity) + ", radius=" + str(self.radius) + "}"
 
     def display(self, screen):
-        pygame.draw.circle(screen, constants.RED , [self.x, self.y], self.radius)
+        pygame.draw.circle(screen, constants.RED , self.position, self.radius)
 
     def move_right(self):
-        self.x += self.velocity
+        self.angle = -90
     
     def move_left(self):
-        self.x -= self.velocity
+        self.angle = 90
 
     def move_up(self):
-        self.y -= self.velocity
+        self.angle = 180
     
     def move_down(self):
-        self.y += self.velocity
+        self.angle = 0
+
+    def move(self):
+        self.position += self.velocity.rotate(self.angle)
     
     def handle_message(self, message):
         pass
