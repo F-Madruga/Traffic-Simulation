@@ -8,7 +8,7 @@ class City():
         self.blocks = blocks
         self.checkpoints = checkpoints
         self.cars = []
-        for i in range(num_cars):
+        for _ in range(num_cars):
             checkpoint = self.checkpoints[random.randint(0, len(checkpoints) - 1)]
             block = self.blocks[checkpoint[0]][checkpoint[1]]
             # (Up, Down, Left, Right)
@@ -50,6 +50,7 @@ class City():
                     angle = 0
                 else:
                     angle = 180
+            # * Cantos
             # elif neighbours == (True, False, True, False):
             #     if direction == 0:
             #         angle = 0
@@ -70,7 +71,10 @@ class City():
             #         angle = 90
             #     else:
             #         angle = 180
-            self.cars.append(Car(x, y, angle))
+            block[2].append(Car(x, y, angle))
+            self.blocks[checkpoint[0]][checkpoint[1]] = block
+            # self.cars.append(Car(x, y, angle))
+            
 
     
     @staticmethod
@@ -95,11 +99,11 @@ class City():
             blocks_line = []
             for j in range(len(matrix[i])):
                 if matrix[i][j] == 0:
-                    blocks_line.append((pygame.Rect(x, y, block_width, block_height), constants.BLACK))
+                    blocks_line.append([pygame.Rect(x, y, block_width, block_height), constants.BLACK, []])
                 elif matrix[i][j] == 1:
-                    blocks_line.append((pygame.Rect(x, y, block_width, block_height), constants.WHITE))
+                    blocks_line.append([pygame.Rect(x, y, block_width, block_height), constants.WHITE, []])
                 elif matrix[i][j] == 2:
-                    blocks_line.append((pygame.Rect(x, y, block_width, block_height), constants.GRAY))
+                    blocks_line.append([pygame.Rect(x, y, block_width, block_height), constants.GRAY, []])
                     checkpoints.append((i, j))
                 x += block_width
             blocks.append(blocks_line)
@@ -110,10 +114,31 @@ class City():
     def __str__(self):
         return "City={blocks=" + str(self.blocks) + ", checkpoints=" + str(self.checkpoints) + "}"
     
+    def get_car_block(self, car):
+        block_width = self.blocks[0][0][0].width
+        block_height = self.blocks[0][0][0].height
+        block_x_index = car.position[0] // block_width
+        block_y_index = car.position[1] // block_height
+        return (int(block_x_index), int(block_y_index))
+    
     def display(self, screen):
-        for blocks_line in self.blocks:
-            for blocks in blocks_line:
-                pygame.draw.rect(screen, blocks[1], blocks[0])
-        for car in self.cars:
-            car.display(screen)
-            car.move()
+        for i in range(len(self.blocks)):
+            for j in range(len(self.blocks[i])):
+                pygame.draw.rect(screen, self.blocks[i][j][1], self.blocks[i][j][0])
+                car_to_keep = []
+                for car_index in range(len(self.blocks[i][j][2])):
+                    x, y = self.get_car_block(self.blocks[i][j][2][car_index])
+                    if x != j or y != i:
+                        self.blocks[y][x][2].append(self.blocks[i][j][2][car_index])
+                    else:
+                        car_to_keep.append(self.blocks[i][j][2][car_index])
+                self.blocks[i][j][2] = car_to_keep
+        
+        for i in range(len(self.blocks)):
+            for j in range(len(self.blocks[i])):
+                for car_index in range(len(self.blocks[i][j][2])):
+                    self.blocks[i][j][2][car_index].display(screen)
+                    sub_blocks = []
+                    for g in range(y - 1, y + 2):
+                        sub_blocks.append(self.blocks[g][x - 1: x + 2])
+                    self.blocks[i][j][2][car_index].move(sub_blocks)
