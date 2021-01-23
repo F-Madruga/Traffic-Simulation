@@ -6,6 +6,7 @@ from car import Car
 
 
 def main(argv):
+
     city = City.read_file(argv[0], constants.WIDTH, constants.HEIGHT)
 
     carryOn = True
