@@ -51,10 +51,8 @@ class Car(Actor):
         decision = self.next_step[0]
         if self.next_step[1](self.position[0], self.position[1]):
             if decision == 0: # Turn left
-                # TODO
                 self.move_left()
             elif decision == len(front_blocks) - 1: # Turn right
-                # TODO
                 self.move_right()
             self.next_step = []
     
@@ -77,8 +75,6 @@ class Car(Actor):
                 self.next_step.append(lambda x, y: x >= blocks[1][1][1].x + ((3 * blocks[1][1][1].width) / 4))
 
         elif decision == len(front_blocks) - 1: # Turn right
-            # TODO
-            # self.next_step.append(lambda x, y: True)
             if self.angle == 0: # Down
                 self.next_step.append(lambda x, y: y >= blocks[1][1][1].y + (blocks[1][1][1].height / 4))
             elif self.angle == 180: # Up
