@@ -54,8 +54,8 @@ class Car(Actor):
         self.position += self.velocity.rotate(self.angle)
 
     def execute_step(self, blocks, front_blocks, possible_directions):
-        if len(possible_directions) > 1:
-            self.handle_intersect(blocks, front_blocks, possible_directions)
+        #if len(possible_directions) > 1:
+            #self.handle_intersect(blocks, front_blocks, possible_directions)
         decision = self.next_step[0]
         if self.next_step[1](self.position[0], self.position[1]):
             if decision == 0: # Turn left
@@ -67,15 +67,6 @@ class Car(Actor):
     def handle_intersect(self, blocks, front_blocks, possible_directions):
         intersect_blocks = [front_blocks[possible_direction] for possible_direction in possible_directions]
         intersect_blocks.append(blocks[1][1])
-        self.address(Message("Pára crl", messageType="stop"))
-        for block in intersect_blocks:
-            for car in block[3]:
-                if car.id != self.id:
-                    print(car.id)
-                    print(self.id)
-                    print(block[0])
-                    if block[0] == blocks[1][1][0]:
-                        car.address(Message("Pára crl", messageType="stop"))
     
     def decide_direction(self, blocks, front_blocks, possible_directions):
         decision = random.choice(possible_directions)
@@ -123,6 +114,8 @@ class Car(Actor):
 
     def handle_message(self, message):
         if message.messageType == "stop":
+            self.velocity = Vector2(0.0, 0.0)
+        if message.messageType == "light_stop":
             self.velocity = Vector2(0.0, 0.0)
         if message.messageType == "go":
             self.velocity = Vector2(0.0, 0.2)

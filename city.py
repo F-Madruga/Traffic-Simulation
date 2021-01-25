@@ -2,6 +2,8 @@ import pygame
 import random
 import constants
 from car import Car
+from traffic_light import TrafficLight
+
 
 class City():
     def __init__(self, blocks, checkpoints, num_cars=constants.CARS_NUMBER):
@@ -71,7 +73,30 @@ class City():
             self.blocks[checkpoint[0]][checkpoint[1]][3].append(car1)
 
 
-    
+    def generate_traffic_lights(self, screen):
+        traffic_light_blocks = []
+        for i in range(len(self.blocks)):
+            for j in range(len(self.blocks)):
+                if self.blocks[i][j][2] == constants.WHITE:
+                    if self.blocks[i + 1][j][2] == constants.WHITE \
+                            and self.blocks[i - 1][j][2] == constants.WHITE \
+                            and self.blocks[i][j - 1][2] == constants.WHITE \
+                            and self.blocks[i][j + 1][2] == constants.WHITE:
+
+                        # Blocos adjacentes ao bloco do semáforo
+                        traffic_light_blocks.append(self.blocks[i][j - 1])
+                        traffic_light_blocks.append(self.blocks[i + 1][j])
+                        traffic_light_blocks.append(self.blocks[i][j + 1])
+                        traffic_light_blocks.append(self.blocks[i - 1][j])
+
+                        traffic_light = TrafficLight(self.blocks[i][j][1].x + (self.blocks[i][j][1].width / 2),
+                                                     self.blocks[i][j][1].y + (self.blocks[i][j][1].height / 2),
+                                                     self.blocks[i][j][0] ,traffic_light_blocks)
+
+                        traffic_light.display(screen)
+                        traffic_light.light_stop()
+
+
     @staticmethod
     def read_file(path, screen_width, screen_height):
         matrix = []
@@ -117,7 +142,7 @@ class City():
         block_x_index = car.position[0] // block_width
         block_y_index = car.position[1] // block_height
         return (int(block_x_index), int(block_y_index))
-    
+
     def display(self, screen):
         for i in range(len(self.blocks)):
             for j in range(len(self.blocks[i])):
