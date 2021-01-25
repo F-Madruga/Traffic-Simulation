@@ -10,7 +10,7 @@ WIDTH = 700
 HEIGHT = 700
 
 # City
-CARS_NUMBER = 4
+CARS_NUMBER = 40
 
 # Car
 SIZE = 10
