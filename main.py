@@ -3,11 +3,13 @@ import pygame
 import constants
 from city import City
 from car import Car
+from traffic_light import TrafficLight
 
 
 def main(argv):
 
     city = City.read_file(argv[0], constants.WIDTH, constants.HEIGHT)
+    traffic_light = TrafficLight(350, 350)
 
     carryOn = True
     pygame.init()
@@ -20,6 +22,7 @@ def main(argv):
             if event.type == pygame.QUIT:
                 carryOn = False
         city.display(screen)
+        traffic_light.display(screen)
         pygame.display.update()
     pygame.quit()
 
