@@ -2,6 +2,7 @@ import pygame
 import random
 import constants
 from actormodel.actor import Actor
+from actormodel.message import Message
 from pygame.math import Vector2
 from math import sin, cos, radians
 
@@ -39,15 +40,22 @@ class Car(Actor):
 
     def move(self, blocks):
         # front_blocks = [left, left_front, front, right_front, right]
-        if len(self.next_step) != 0:
-            self.execute_step(blocks)
-        elif blocks[1][1][0] != self.current_block_id:
-            self.current_block_id = blocks[1][1][0]
-            self.decide_direction(blocks)
+        if len(self.next_step) != 0 or blocks[1][1][0] != self.current_block_id:
+            front_blocks = self.get_front_blocks(blocks)
+            possible_directions = []
+            for i in range(0, len(front_blocks), 2):
+                if front_blocks[i][2] != constants.BLACK:
+                    possible_directions.append(i)
+            if len(self.next_step) != 0:
+                self.execute_step(blocks, front_blocks, possible_directions)
+            elif blocks[1][1][0] != self.current_block_id:
+                self.current_block_id = blocks[1][1][0]
+                self.decide_direction(blocks, front_blocks, possible_directions)
         self.position += self.velocity.rotate(self.angle)
 
-    def execute_step(self, blocks):
-        front_blocks = self.get_front_blocks(blocks)
+    def execute_step(self, blocks, front_blocks, possible_directions):
+        if len(possible_directions) > 1:
+            self.handle_intersect(blocks, front_blocks, possible_directions)
         decision = self.next_step[0]
         if self.next_step[1](self.position[0], self.position[1]):
             if decision == 0: # Turn left
@@ -56,13 +64,21 @@ class Car(Actor):
                 self.move_right()
             self.next_step = []
     
-    def decide_direction(self, blocks):
-        front_blocks = self.get_front_blocks(blocks)
-        possible_direction = []
-        for i in range(0, len(front_blocks), 2):
-            if front_blocks[i][2] != constants.BLACK:
-                possible_direction.append(i)
-        decision = random.choice(possible_direction)
+    def handle_intersect(self, blocks, front_blocks, possible_directions):
+        intersect_blocks = [front_blocks[possible_direction] for possible_direction in possible_directions]
+        intersect_blocks.append(blocks[1][1])
+        self.address(Message("Pára crl", messageType="stop"))
+        for block in intersect_blocks:
+            for car in block[3]:
+                if car.id != self.id:
+                    print(car.id)
+                    print(self.id)
+                    print(block[0])
+                    if block[0] == blocks[1][1][0]:
+                        car.address(Message("Pára crl", messageType="stop"))
+    
+    def decide_direction(self, blocks, front_blocks, possible_directions):
+        decision = random.choice(possible_directions)
         self.next_step.append(decision)
         if decision == 0: # Turn left
             if self.angle == 0: # Down
@@ -73,7 +89,6 @@ class Car(Actor):
                 self.next_step.append(lambda x, y: x <= blocks[1][1][1].x + (blocks[1][1][1].width / 4))
             else: # Right
                 self.next_step.append(lambda x, y: x >= blocks[1][1][1].x + ((3 * blocks[1][1][1].width) / 4))
-
         elif decision == len(front_blocks) - 1: # Turn right
             if self.angle == 0: # Down
                 self.next_step.append(lambda x, y: y >= blocks[1][1][1].y + (blocks[1][1][1].height / 4))
@@ -107,4 +122,7 @@ class Car(Actor):
         return front_blocks
 
     def handle_message(self, message):
-        pass
+        if message.messageType == "stop":
+            self.velocity = Vector2(0.0, 0.0)
+        if message.messageType == "go":
+            self.velocity = Vector2(0.0, 0.2)

@@ -7,105 +7,69 @@ class City():
     def __init__(self, blocks, checkpoints, num_cars=constants.CARS_NUMBER):
         self.blocks = blocks
         self.checkpoints = checkpoints
-        # *
+        self.generate_cars(checkpoints)
         # for _ in range(num_cars):
         #     checkpoint = self.checkpoints[random.randint(0, len(checkpoints) - 1)]
-            # block = self.blocks[checkpoint[0]][checkpoint[1]]
-            # (Up, Down, Left, Right)
             
-            # neighbours = (
-            #     self.blocks[checkpoint[0] - 1][checkpoint[1]][2] == constants.BLACK,
-            #     self.blocks[checkpoint[0] + 1][checkpoint[1]][2] == constants.BLACK,
-            #     self.blocks[checkpoint[0]][checkpoint[1] - 1][2] == constants.BLACK,
-            #     self.blocks[checkpoint[0]][checkpoint[1] + 1][2] == constants.BLACK,
-            # )
-            # x = self.blocks[checkpoint[0]][checkpoint[1]][1].x
-            # y = self.blocks[checkpoint[0]][checkpoint[1]][1].y
-            # direction = random.randint(0, 1)
-            # if direction == 0:
-            #     x += (self.blocks[checkpoint[0]][checkpoint[1]][1].width / 4.0)
-            #     y += (self.blocks[checkpoint[0]][checkpoint[1]][1].height / 4.0)
-            # else:
-            #     x += (self.blocks[checkpoint[0]][checkpoint[1]][1].width * 3.0 / 4.0)
-            #     y += (self.blocks[checkpoint[0]][checkpoint[1]][1].height * 3.0 / 4.0)
-            # angle = 0
-            # if neighbours == (True, True, False, False) \
-            #     or neighbours == (False, True, False, False) \
-            #     or neighbours == (True, False, False, False):
-            #     if direction == 0:
-            #         angle = 90
-            #     else:
-            #         angle = 270
-            # elif neighbours == (False, False, True, True) \
-            #     or neighbours == (False, False, True, False) \
-            #     or neighbours == (False, False, False, True):
-            #     if direction == 0:
-            #         angle = 0
-            #     else:
-            #         angle = 180
-            # *
-            # * Cantos
-            # elif neighbours == (True, False, True, False):
-            #     if direction == 0:
-            #         angle = 0
-            #     else:
-            #         angle = -90
-            # elif neighbours == (True, False, False, True):
-            #     if direction == 0:
-            #         angle = 90
-            #     else:
-            #         angle = 180
-            # elif neighbours == (False, True, True, False):
-            #     if direction == 0:
-            #         angle = 0
-            #     else:
-            #         angle = 180
-            # elif neighbours == (False, True, False, True):
-            #     if direction == 0:
-            #         angle = 90
-            #     else:
-            #         angle = 180
-            # *
-            # self.blocks[checkpoint[0]][checkpoint[1]][3].append(Car(x, y, angle, self.blocks[checkpoint[0]][checkpoint[1]][0]))
-            # *
-            # self.blocks[checkpoint[0]][checkpoint[1]] = block
-            # self.cars.append(Car(x, y, angle))
-        for _ in range(num_cars):
-            checkpoint = self.checkpoints[random.randint(0, len(checkpoints) - 1)]
+        #     neighbours = (
+        #         self.blocks[checkpoint[0] - 1][checkpoint[1]][2] == constants.BLACK,
+        #         self.blocks[checkpoint[0] + 1][checkpoint[1]][2] == constants.BLACK,
+        #         self.blocks[checkpoint[0]][checkpoint[1] - 1][2] == constants.BLACK,
+        #         self.blocks[checkpoint[0]][checkpoint[1] + 1][2] == constants.BLACK,
+        #     )
+        #     x = self.blocks[checkpoint[0]][checkpoint[1]][1].x
+        #     y = self.blocks[checkpoint[0]][checkpoint[1]][1].y
+        #     direction = random.randint(0, 1)
+        #     if direction == 0:
+        #         x += (self.blocks[checkpoint[0]][checkpoint[1]][1].width / 4.0)
+        #         y += (self.blocks[checkpoint[0]][checkpoint[1]][1].height / 4.0)
+        #     else:
+        #         x += (self.blocks[checkpoint[0]][checkpoint[1]][1].width * 3.0 / 4.0)
+        #         y += (self.blocks[checkpoint[0]][checkpoint[1]][1].height * 3.0 / 4.0)
             
+        #     angle = 0
+        #     if neighbours == (True, True, False, False) \
+        #         or neighbours == (False, True, False, False) \
+        #         or neighbours == (True, False, False, False):
+        #         if direction == 0:
+        #             angle = 90
+        #         else:
+        #             angle = 270
+        #     elif neighbours == (False, False, True, True) \
+        #         or neighbours == (False, False, True, False) \
+        #         or neighbours == (False, False, False, True):
+        #         if direction == 0:
+        #             angle = 0
+        #         else:
+        #             angle = 180
+        #     car = Car(x, y, angle, self.blocks[checkpoint[0]][checkpoint[1]][0])
+        #     self.blocks[checkpoint[0]][checkpoint[1]][3].append(car)
+    
+    def generate_cars(self, checkpoints):
+        for checkpoint in checkpoints:
             neighbours = (
                 self.blocks[checkpoint[0] - 1][checkpoint[1]][2] == constants.BLACK,
                 self.blocks[checkpoint[0] + 1][checkpoint[1]][2] == constants.BLACK,
                 self.blocks[checkpoint[0]][checkpoint[1] - 1][2] == constants.BLACK,
                 self.blocks[checkpoint[0]][checkpoint[1] + 1][2] == constants.BLACK,
             )
-            x = self.blocks[checkpoint[0]][checkpoint[1]][1].x
-            y = self.blocks[checkpoint[0]][checkpoint[1]][1].y
-            direction = random.randint(0, 1)
-            if direction == 0:
-                x += (self.blocks[checkpoint[0]][checkpoint[1]][1].width / 4.0)
-                y += (self.blocks[checkpoint[0]][checkpoint[1]][1].height / 4.0)
-            else:
-                x += (self.blocks[checkpoint[0]][checkpoint[1]][1].width * 3.0 / 4.0)
-                y += (self.blocks[checkpoint[0]][checkpoint[1]][1].height * 3.0 / 4.0)
-            
-            angle = 0
+            x0 = self.blocks[checkpoint[0]][checkpoint[1]][1].x + (self.blocks[checkpoint[0]][checkpoint[1]][1].width / 4.0)
+            x1 = self.blocks[checkpoint[0]][checkpoint[1]][1].x + (self.blocks[checkpoint[0]][checkpoint[1]][1].width * 3.0 / 4.0)
+            y0 = self.blocks[checkpoint[0]][checkpoint[1]][1].y + (self.blocks[checkpoint[0]][checkpoint[1]][1].height / 4.0)
+            y1 = self.blocks[checkpoint[0]][checkpoint[1]][1].y + (self.blocks[checkpoint[0]][checkpoint[1]][1].height * 3.0 / 4.0)
             if neighbours == (True, True, False, False) \
                 or neighbours == (False, True, False, False) \
                 or neighbours == (True, False, False, False):
-                if direction == 0:
-                    angle = 90
-                else:
-                    angle = 270
+                car0 = Car(x0, y0, 90, self.blocks[checkpoint[0]][checkpoint[1]][0])
+                car1 = Car(x1, y1, 270, self.blocks[checkpoint[0]][checkpoint[1]][0])
             elif neighbours == (False, False, True, True) \
                 or neighbours == (False, False, True, False) \
                 or neighbours == (False, False, False, True):
-                if direction == 0:
-                    angle = 0
-                else:
-                    angle = 180
-            car = Car(x, y, angle, self.blocks[checkpoint[0]][checkpoint[1]][0])
-            self.blocks[checkpoint[0]][checkpoint[1]][3].append(car)
+                car0 = Car(x0, y0, 0, self.blocks[checkpoint[0]][checkpoint[1]][0])
+                car1 = Car(x1, y1, 180, self.blocks[checkpoint[0]][checkpoint[1]][0])
+            self.blocks[checkpoint[0]][checkpoint[1]][3].append(car0)
+            self.blocks[checkpoint[0]][checkpoint[1]][3].append(car1)
+
 
     
     @staticmethod
