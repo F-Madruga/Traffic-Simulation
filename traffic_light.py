@@ -1,16 +1,20 @@
+import math
 import pygame
 import constants
+from pygame.math import Vector2
+from actormodel.actor import Actor
+from actormodel.message import Message
 
-class Traffic_light:
-    def __init__(self, x1, y1, x2, y2, color = constants.GREEN):
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        self.color = color
+
+class TrafficLight(Actor):
+    count = 0
+    def __init__(self, x, y, radius=constants.TRAFFIC_LIGHT_SIZE):
+        self.id = TrafficLight.count
+        self.position = Vector2(x, y)
+        self.radius = radius
 
     def display(self, screen):
-        pygame.draw.line(screen, self.color, [self.x1, self.y1], [self.x2, self.y2], 3)
-
-    def change_color(self, color):
-        self.color = color
+        pygame.draw.rect(screen, constants.RED, pygame.Rect(self.position[0] - self.radius, self.position[1] - self.radius, self.radius, self.radius))
+        pygame.draw.rect(screen, constants.GREEN, pygame.Rect(self.position[0], self.position[1] - self.radius, self.radius, self.radius))
+        pygame.draw.rect(screen, constants.GREEN, pygame.Rect(self.position[0] - self.radius, self.position[1], self.radius, self.radius))
+        pygame.draw.rect(screen, constants.RED, pygame.Rect(self.position[0], self.position[1], self.radius, self.radius))
