@@ -9,7 +9,7 @@ from math import sin, cos, radians
 
 class Car(Actor):
     count = 0
-    def __init__(self, x, y, angle, current_block_id, velocity=Vector2(0.0, 0.2), radius=constants.SIZE):
+    def __init__(self, x, y, angle, current_block_id, velocity=Vector2(0.0, 0.2), radius=constants.CAR_SIZE):
         self.id = Car.count
         self.current_block_id = current_block_id
         Car.count += 1

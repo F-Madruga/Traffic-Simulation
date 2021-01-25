@@ -12,5 +12,8 @@ HEIGHT = 700
 # City
 CARS_NUMBER = 40
 
-# Car
-SIZE = 10
+# Cars
+CAR_SIZE = 10
+
+# Traffic lights
+TRAFFIC_LIGHT_SIZE = 10
