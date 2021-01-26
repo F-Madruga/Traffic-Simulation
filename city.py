@@ -133,7 +133,7 @@ class City():
                 elif matrix[i][j] == 1:
                     blocks_line.append([count, pygame.Rect(x, y, block_width, block_height), constants.WHITE, []])
                 elif matrix[i][j] == 2:
-                    blocks_line.append([count, pygame.Rect(x, y, block_width, block_height), constants.GRAY, []])
+                    blocks_line.append([count, pygame.Rect(x, y, block_width, block_height), constants.WHITE, []])
                     checkpoints.append((i, j))
                 count += 1
                 x += block_width
