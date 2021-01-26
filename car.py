@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 import constants
 from actormodel.actor import Actor
 from actormodel.message import Message
@@ -21,7 +22,7 @@ class Car(Actor):
         super().__init__()
     
     def __str__(self):
-     return "Car={id=" + str(self.id) + ", position=" + str(self.position) + ", velocity=" + str(self.velocity) + ", radius=" + str(self.radius) + "}"
+     return "Car={id=" + str(self.id) + ", position=" + str(self.position) + ", angle=" + str(self.angle) + ", velocity=" + str(self.velocity) + ", radius=" + str(self.radius) + "}"
 
     def display(self, screen):
         pygame.draw.circle(screen, constants.RED , self.position, self.radius)
@@ -51,6 +52,55 @@ class Car(Actor):
             elif blocks[1][1][0] != self.current_block_id:
                 self.current_block_id = blocks[1][1][0]
                 self.decide_direction(blocks, front_blocks, possible_directions)
+        elif len(self.next_step) == 0:
+            front_blocks = self.get_front_blocks(blocks)
+            # stop = False
+            # for car in front_blocks[2][3]:
+            #     distance = math.sqrt(((car.position[0] - self.position[0]) ** 2) + ((car.position[1] - self.position[1]) ** 2))
+            #     min_distance = 0
+            #     if blocks[0][0][1].width < blocks[0][0][1].height:
+            #         min_distance = blocks[0][0][1].width / 5
+            #     else:
+            #         min_distance = blocks[0][0][1].height / 5
+            #     if distance < min_distance:
+            #         stop = True
+            #         break
+            # if stop:
+            #     self.velocity = self.velocity = Vector2(0.0, 0.0)
+            # else:
+            #     self.velocity = self.velocity = Vector2(0.0, constants.VELOCITY)
+            stop = False
+            for car in front_blocks[2][3] + blocks[1][1][3]:
+                if car.angle == self.angle and car.id != self.id:
+                    if self.angle == 0:
+                        min_distance = blocks[0][0][1].height / 5
+                        distance = self.position[1] - car.position[1]
+                        if distance < 0 and abs(distance) <= min_distance:
+                            stop = True
+                            break
+                    elif self.angle == 180:
+                        min_distance = blocks[0][0][1].height / 5
+                        distance = self.position[1] - car.position[1]
+                        if distance > 0 and abs(distance) <= min_distance:
+                            stop = True
+                            break
+                    elif self.angle == 90:
+                        min_distance = blocks[0][0][1].width / 5
+                        distance = self.position[0] - car.position[0]
+                        if distance > 0 and abs(distance) <= min_distance:
+                            stop = True
+                            break
+                    else:
+                        min_distance = blocks[0][0][1].width / 5
+                        distance = self.position[0] - car.position[0]
+                        if distance < 0 and abs(distance) <= min_distance:
+                            stop = True
+                            break
+            if stop:
+                self.velocity = self.velocity = Vector2(0.0, 0.0)
+            else:
+                self.velocity = self.velocity = Vector2(0.0, constants.VELOCITY)
+
         self.position += self.velocity.rotate(self.angle)
 
     def execute_step(self, blocks, front_blocks, possible_directions):
