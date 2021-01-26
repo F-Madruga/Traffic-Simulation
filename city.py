@@ -6,10 +6,12 @@ from traffic_light import TrafficLight
 
 
 class City():
-    def __init__(self, blocks, checkpoints, num_cars=constants.CARS_NUMBER):
+    def __init__(self, blocks, checkpoints):
         self.blocks = blocks
         self.checkpoints = checkpoints
         self.generate_cars(checkpoints)
+        self.traffic_lights = []
+        self.generate_traffic_lights()
         # for _ in range(num_cars):
         #     checkpoint = self.checkpoints[random.randint(0, len(checkpoints) - 1)]
             
@@ -48,6 +50,11 @@ class City():
         #     self.blocks[checkpoint[0]][checkpoint[1]][3].append(car)
     
     def generate_cars(self, checkpoints):
+        radius = constants.CAR_SIZE
+        if self.blocks[0][0][1].width > self.blocks[0][0][1].height:
+            radius *= (self.blocks[0][0][1].height / 2)
+        else:
+            radius *= (self.blocks[0][0][1].width / 2)
         for checkpoint in checkpoints:
             neighbours = (
                 self.blocks[checkpoint[0] - 1][checkpoint[1]][2] == constants.BLACK,
@@ -62,39 +69,41 @@ class City():
             if neighbours == (True, True, False, False) \
                 or neighbours == (False, True, False, False) \
                 or neighbours == (True, False, False, False):
-                car0 = Car(x0, y0, 90, self.blocks[checkpoint[0]][checkpoint[1]][0])
-                car1 = Car(x1, y1, 270, self.blocks[checkpoint[0]][checkpoint[1]][0])
+                car0 = Car(x0, y0, 90, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                car1 = Car(x1, y1, 270, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
             elif neighbours == (False, False, True, True) \
                 or neighbours == (False, False, True, False) \
                 or neighbours == (False, False, False, True):
-                car0 = Car(x0, y0, 0, self.blocks[checkpoint[0]][checkpoint[1]][0])
-                car1 = Car(x1, y1, 180, self.blocks[checkpoint[0]][checkpoint[1]][0])
+                car0 = Car(x0, y0, 0, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                car1 = Car(x1, y1, 180, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
             self.blocks[checkpoint[0]][checkpoint[1]][3].append(car0)
             self.blocks[checkpoint[0]][checkpoint[1]][3].append(car1)
 
 
-    def generate_traffic_lights(self, screen):
-        traffic_light_blocks = []
-        for i in range(len(self.blocks)):
-            for j in range(len(self.blocks)):
-                if self.blocks[i][j][2] == constants.WHITE:
-                    if self.blocks[i + 1][j][2] == constants.WHITE \
-                            and self.blocks[i - 1][j][2] == constants.WHITE \
-                            and self.blocks[i][j - 1][2] == constants.WHITE \
-                            and self.blocks[i][j + 1][2] == constants.WHITE:
+    def generate_traffic_lights(self):
+        radius = constants.TRAFFIC_LIGHT_SIZE
+        if self.blocks[0][0][1].width > self.blocks[0][0][1].height:
+            radius *= (self.blocks[0][0][1].height / 2)
+        else:
+            radius *= (self.blocks[0][0][1].width / 2)
+        for i in range(1, len(self.blocks) - 1):
+            for j in range(1, len(self.blocks[i]) - 1):
+                traffic_light_blocks = []
+                traffic_light_blocks.append(self.blocks[i][j])
+                traffic_light_blocks.append(self.blocks[i][j - 1])
+                traffic_light_blocks.append(self.blocks[i - 1][j])
+                traffic_light_blocks.append(self.blocks[i][j + 1])
+                traffic_light_blocks.append(self.blocks[i + 1][j])
+                left = traffic_light_blocks[1][2] != constants.BLACK
+                up = traffic_light_blocks[2][2] != constants.BLACK
+                right = traffic_light_blocks[3][2] != constants.BLACK
+                down = traffic_light_blocks[4][2] != constants.BLACK
+                count = sum([left, right, up, down])
+                if count >= 3 and traffic_light_blocks[0][2] != constants.BLACK:
+                    x = traffic_light_blocks[0][1].x + (traffic_light_blocks[0][1].width / 2)
+                    y = traffic_light_blocks[0][1].y + (traffic_light_blocks[0][1].height / 2)
+                    self.traffic_lights.append(TrafficLight(x, y, traffic_light_blocks, radius))
 
-                        # Blocos adjacentes ao bloco do semáforo
-                        traffic_light_blocks.append(self.blocks[i][j - 1])
-                        traffic_light_blocks.append(self.blocks[i + 1][j])
-                        traffic_light_blocks.append(self.blocks[i][j + 1])
-                        traffic_light_blocks.append(self.blocks[i - 1][j])
-
-                        traffic_light = TrafficLight(self.blocks[i][j][1].x + (self.blocks[i][j][1].width / 2),
-                                                     self.blocks[i][j][1].y + (self.blocks[i][j][1].height / 2),
-                                                     self.blocks[i][j][0] ,traffic_light_blocks)
-
-                        traffic_light.display(screen)
-                        traffic_light.light_stop()
 
 
     @staticmethod
@@ -164,3 +173,7 @@ class City():
                     for g in range(i - 1, i + 2):
                         sub_blocks.append(self.blocks[g][j - 1: j + 2])
                     self.blocks[i][j][3][car_index].move(sub_blocks)
+        
+        for traffic_light in self.traffic_lights:
+            traffic_light.display(screen)
+            traffic_light.handle_intersect()
