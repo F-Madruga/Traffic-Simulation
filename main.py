@@ -2,8 +2,6 @@ import sys
 import pygame
 import constants
 from city import City
-from car import Car
-from traffic_light import TrafficLight
 
 
 def main(argv):
@@ -21,8 +19,6 @@ def main(argv):
             if event.type == pygame.QUIT:
                 carryOn = False
         city.display(screen)
-        city.generate_traffic_lights(screen)
-        #traffic_light.display(screen)
         pygame.display.update()
     pygame.quit()
 

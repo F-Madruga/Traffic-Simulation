@@ -9,7 +9,7 @@ from math import sin, cos, radians
 
 class Car(Actor):
     count = 0
-    def __init__(self, x, y, angle, current_block_id, velocity=Vector2(0.0, 0.2), radius=constants.CAR_SIZE):
+    def __init__(self, x, y, angle, current_block_id, radius=constants.CAR_SIZE, velocity=Vector2(0.0, constants.VELOCITY)):
         self.id = Car.count
         self.current_block_id = current_block_id
         Car.count += 1
@@ -64,10 +64,6 @@ class Car(Actor):
                 self.move_right()
             self.next_step = []
     
-    def handle_intersect(self, blocks, front_blocks, possible_directions):
-        intersect_blocks = [front_blocks[possible_direction] for possible_direction in possible_directions]
-        intersect_blocks.append(blocks[1][1])
-    
     def decide_direction(self, blocks, front_blocks, possible_directions):
         decision = random.choice(possible_directions)
         self.next_step.append(decision)
@@ -115,7 +111,5 @@ class Car(Actor):
     def handle_message(self, message):
         if message.messageType == "stop":
             self.velocity = Vector2(0.0, 0.0)
-        if message.messageType == "light_stop":
-            self.velocity = Vector2(0.0, 0.0)
         if message.messageType == "go":
-            self.velocity = Vector2(0.0, 0.2)
+            self.velocity = Vector2(0.0, constants.VELOCITY)
