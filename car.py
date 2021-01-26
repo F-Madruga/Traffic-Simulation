@@ -54,21 +54,6 @@ class Car(Actor):
                 self.decide_direction(blocks, front_blocks, possible_directions)
         elif len(self.next_step) == 0:
             front_blocks = self.get_front_blocks(blocks)
-            # stop = False
-            # for car in front_blocks[2][3]:
-            #     distance = math.sqrt(((car.position[0] - self.position[0]) ** 2) + ((car.position[1] - self.position[1]) ** 2))
-            #     min_distance = 0
-            #     if blocks[0][0][1].width < blocks[0][0][1].height:
-            #         min_distance = blocks[0][0][1].width / 5
-            #     else:
-            #         min_distance = blocks[0][0][1].height / 5
-            #     if distance < min_distance:
-            #         stop = True
-            #         break
-            # if stop:
-            #     self.velocity = self.velocity = Vector2(0.0, 0.0)
-            # else:
-            #     self.velocity = self.velocity = Vector2(0.0, constants.VELOCITY)
             stop = False
             for car in front_blocks[2][3] + blocks[1][1][3]:
                 if car.angle == self.angle and car.id != self.id:
