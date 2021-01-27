@@ -12,42 +12,6 @@ class City():
         self.generate_cars(checkpoints)
         self.traffic_lights = []
         self.generate_traffic_lights()
-        # for _ in range(num_cars):
-        #     checkpoint = self.checkpoints[random.randint(0, len(checkpoints) - 1)]
-            
-        #     neighbours = (
-        #         self.blocks[checkpoint[0] - 1][checkpoint[1]][2] == constants.BLACK,
-        #         self.blocks[checkpoint[0] + 1][checkpoint[1]][2] == constants.BLACK,
-        #         self.blocks[checkpoint[0]][checkpoint[1] - 1][2] == constants.BLACK,
-        #         self.blocks[checkpoint[0]][checkpoint[1] + 1][2] == constants.BLACK,
-        #     )
-        #     x = self.blocks[checkpoint[0]][checkpoint[1]][1].x
-        #     y = self.blocks[checkpoint[0]][checkpoint[1]][1].y
-        #     direction = random.randint(0, 1)
-        #     if direction == 0:
-        #         x += (self.blocks[checkpoint[0]][checkpoint[1]][1].width / 4.0)
-        #         y += (self.blocks[checkpoint[0]][checkpoint[1]][1].height / 4.0)
-        #     else:
-        #         x += (self.blocks[checkpoint[0]][checkpoint[1]][1].width * 3.0 / 4.0)
-        #         y += (self.blocks[checkpoint[0]][checkpoint[1]][1].height * 3.0 / 4.0)
-            
-        #     angle = 0
-        #     if neighbours == (True, True, False, False) \
-        #         or neighbours == (False, True, False, False) \
-        #         or neighbours == (True, False, False, False):
-        #         if direction == 0:
-        #             angle = 90
-        #         else:
-        #             angle = 270
-        #     elif neighbours == (False, False, True, True) \
-        #         or neighbours == (False, False, True, False) \
-        #         or neighbours == (False, False, False, True):
-        #         if direction == 0:
-        #             angle = 0
-        #         else:
-        #             angle = 180
-        #     car = Car(x, y, angle, self.blocks[checkpoint[0]][checkpoint[1]][0])
-        #     self.blocks[checkpoint[0]][checkpoint[1]][3].append(car)
     
     def generate_cars(self, checkpoints):
         radius = constants.CAR_SIZE
@@ -56,6 +20,7 @@ class City():
         else:
             radius *= (self.blocks[0][0][1].width / 2)
         for checkpoint in checkpoints:
+            # neighbours = (up, down, left, right)
             neighbours = (
                 self.blocks[checkpoint[0] - 1][checkpoint[1]][2] == constants.BLACK,
                 self.blocks[checkpoint[0] + 1][checkpoint[1]][2] == constants.BLACK,
@@ -66,6 +31,8 @@ class City():
             x1 = self.blocks[checkpoint[0]][checkpoint[1]][1].x + (self.blocks[checkpoint[0]][checkpoint[1]][1].width * 3.0 / 4.0)
             y0 = self.blocks[checkpoint[0]][checkpoint[1]][1].y + (self.blocks[checkpoint[0]][checkpoint[1]][1].height / 4.0)
             y1 = self.blocks[checkpoint[0]][checkpoint[1]][1].y + (self.blocks[checkpoint[0]][checkpoint[1]][1].height * 3.0 / 4.0)
+            car0 = None
+            car1 = None
             if neighbours == (True, True, False, False) \
                 or neighbours == (False, True, False, False) \
                 or neighbours == (True, False, False, False):
@@ -76,6 +43,22 @@ class City():
                 or neighbours == (False, False, False, True):
                 car0 = Car(x0, y0, 0, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
                 car1 = Car(x1, y1, 180, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+            else:
+                if neighbours == (True, False, True, False):
+                    car0 = Car(x0, y0, 0, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                    car1 = Car(x1, y1, 270, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                elif neighbours == (True, False, False, True):
+                    car0 = Car(x1, y0, 90, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                    car1 = Car(x0, y1, 0, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                elif neighbours == (False, True, False, True):
+                    car0 = Car(x0, y0, 90, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                    car1 = Car(x1, y1, 180, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                elif neighbours == (False, True, True, False):
+                    car0 = Car(x0, y1, 270, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                    car1 = Car(x1, y0, 180, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                else:
+                    car0 = Car(x0, y0, 90, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
+                    car1 = Car(x1, y1, 270, self.blocks[checkpoint[0]][checkpoint[1]][0], radius)
             self.blocks[checkpoint[0]][checkpoint[1]][3].append(car0)
             self.blocks[checkpoint[0]][checkpoint[1]][3].append(car1)
 
