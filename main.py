@@ -25,5 +25,5 @@ def main(argv):
 if __name__ == "__main__":
     argv = sys.argv[1:]
     if len(argv) == 0:
-        argv.append("./examples/intersec_1.txt")
+        argv.append("./examples/city_1.txt")
     main(argv)
