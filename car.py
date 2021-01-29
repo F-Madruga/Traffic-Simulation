@@ -22,7 +22,7 @@ class Car(Actor):
         self.stopped = False
         self.car_in_front = False
         super().__init__()
-    
+
     def __str__(self):
      return "Car={id=" + str(self.id) + ", position=" + str(self.position) + ", angle=" + str(self.angle) + ", velocity=" + str(self.velocity) + ", radius=" + str(self.radius) + "}"
 
