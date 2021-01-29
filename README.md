@@ -12,7 +12,7 @@ Run main file with the city file
 python main.py <file_path>
 ```
 
-In the examples directory you will find city file examples. This files ara composed by three different types of blocks:
+In the examples directory you will find city file examples. This files are composed by three different types of blocks:
 
 - 0 - Wall
 - 1 - Road
