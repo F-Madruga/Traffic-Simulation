@@ -20,10 +20,12 @@ def main(argv):
                 carryOn = False
             if event.type == pygame.KEYDOWN:
                 if (event.key == pygame.K_LEFT \
-                    or event.key == pygame.K_DOWN) and constants.VELOCITY - 0.01 > 0:
+                    or event.key == pygame.K_DOWN) \
+                    and constants.VELOCITY - 0.01 > 0:
                     constants.VELOCITY -= 0.01
                 if (event.key == pygame.K_RIGHT \
-                    or event.key == pygame.K_UP) and constants.VELOCITY + 0.01 < 4:
+                    or event.key == pygame.K_UP) \
+                    and constants.VELOCITY + 0.01 < 4:
                     constants.VELOCITY += 0.01
         city.display(screen)
         pygame.display.update()
