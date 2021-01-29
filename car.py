@@ -83,11 +83,6 @@ class Car(Actor):
                         if distance < 0 and abs(distance) <= min_distance:
                             self.car_in_front = True
                             break
-            # if stop:
-            #     self.velocity = self.velocity = Vector2(0.0, 0.0)
-            # else:
-            #     if not self.stopped:
-            #         self.velocity = self.velocity = Vector2(0.0, constants.VELOCITY)
         
         if self.stopped or self.car_in_front:
             self.velocity = self.velocity = Vector2(0.0, 0.0)
@@ -97,8 +92,6 @@ class Car(Actor):
         self.position += self.velocity.rotate(self.angle)
 
     def execute_step(self, blocks, front_blocks, possible_directions):
-        #if len(possible_directions) > 1:
-            #self.handle_intersect(blocks, front_blocks, possible_directions)
         decision = self.next_step[0]
         if self.next_step[1](self.position[0], self.position[1]):
             if decision == 0: # Turn left
@@ -155,5 +148,7 @@ class Car(Actor):
         print("Car", self.id, "receive message:", message.content)
         if message.messageType == "stop":
             self.stopped = True
+            message.replyTo(Message("Car " + str(self.id) + " stopped"))
         if message.messageType == "go":
             self.stopped = False
+            message.replyTo(Message("Car " + str(self.id) + " started to move"))
